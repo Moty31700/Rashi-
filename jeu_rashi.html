@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>אוצר מילים · רש"י</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1a1208">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@400;700;900&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#13100a;
+  --parch:#f5f0e0;
+  --parch2:#ede6cc;
+  --ink:#1a1208;
+  --ink2:#3d2e12;
+  --ink3:#7a6440;
+  --gold:#c8952a;
+  --gold2:#e8b84b;
+  --gold3:#f5d080;
+  --red:#8b1a1a;
+  --green:#2a6b3a;
+  --blue:#1a4a7a;
+  --blue2:#2d6da8;
+  --orange:#b85a10;
+  --purple:#5a1a6b;
+  --surface:rgba(245,240,224,.97);
+  --surface2:rgba(237,230,204,.9);
+  --border:rgba(200,149,42,.25);
+  --shadow:rgba(0,0,0,.35);
+  --text:var(--ink);
+  --text2:var(--ink2);
+  --text3:var(--ink3);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:'Crimson Pro',Georgia,serif;background:var(--bg);color:var(--ink);overflow-x:hidden}
+
+/* Parchment texture overlay */
+body::before{content:'';position:fixed;inset:0;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at 15% 10%, rgba(200,149,42,.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 90%, rgba(90,26,107,.05) 0%, transparent 50%);
+  pointer-events:none;z-index:0}
+
+/* Ruled lines */
+body::after{content:'';position:fixed;inset:0;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 30px,rgba(200,149,42,.05) 30px,rgba(200,149,42,.05) 31px);
+  pointer-events:none;z-index:0}
+
+.wrap{position:relative;z-index:1;max-width:660px;margin:0 auto;
+  padding:max(24px,env(safe-area-inset-top)) 16px max(90px,calc(env(safe-area-inset-bottom)+70px))}
+
+/* ══ HEADER ══ */
+.app-header{text-align:center;margin-bottom:28px}
+.menorah{font-size:44px;display:block;margin-bottom:6px;
+  filter:drop-shadow(0 0 12px rgba(200,149,42,.4));
+  animation:glow 3s ease-in-out infinite}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 10px rgba(200,149,42,.3))}
+  50%{filter:drop-shadow(0 0 22px rgba(200,149,42,.6))}}
+.app-title{font-family:'Cinzel',serif;font-size:30px;font-weight:700;
+  color:var(--parch);letter-spacing:2px;line-height:1.2;
+  text-shadow:0 2px 12px rgba(200,149,42,.4)}
+.app-heb{font-family:'Noto Serif Hebrew',serif;font-size:36px;font-weight:900;
+  color:var(--gold2);direction:rtl;line-height:1.2;
+  text-shadow:0 2px 12px rgba(200,149,42,.3)}
+.app-sub{font-size:14px;font-style:italic;color:rgba(245,240,224,.6);margin-top:4px}
+.ornament{display:flex;align-items:center;justify-content:center;gap:14px;
+  color:var(--gold);opacity:.5;margin:10px auto;width:240px}
+.ornament::before,.ornament::after{content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+/* ══ SOURCE LINKS ══ */
+.sources-bar{
+  background:rgba(200,149,42,.12);border:1px solid rgba(200,149,42,.3);
+  border-radius:14px;padding:14px 16px;margin-bottom:18px;
+  display:flex;flex-direction:column;gap:8px}
+.sources-title{font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);font-family:'Cinzel',serif;margin-bottom:2px}
+.source-link{display:flex;align-items:center;gap:8px;
+  background:rgba(245,240,224,.08);border:1px solid rgba(200,149,42,.2);
+  border-radius:10px;padding:10px 14px;text-decoration:none;
+  transition:all .2s;color:var(--parch)}
+.source-link:hover{background:rgba(200,149,42,.15);border-color:rgba(200,149,42,.5);
+  transform:translateY(-1px);box-shadow:0 4px 16px rgba(200,149,42,.15)}
+.source-link .sl-icon{font-size:20px;flex-shrink:0}
+.source-link .sl-body{flex:1;min-width:0}
+.source-link .sl-name{font-weight:700;font-size:14px;color:var(--gold2);display:block}
+.source-link .sl-url{font-size:11px;color:rgba(245,240,224,.45);
+  font-family:'Crimson Pro',monospace;display:block;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;direction:ltr}
+.source-link .sl-arrow{color:var(--gold);font-size:18px;flex-shrink:0}
+
+/* ══ TABS ══ */
+.tabs{display:flex;gap:5px;background:rgba(245,240,224,.1);
+  border-radius:14px;padding:5px;margin-bottom:18px;
+  border:1px solid var(--border)}
+.tab{flex:1;padding:9px 5px;border:none;border-radius:10px;
+  cursor:pointer;font-family:'Crimson Pro',serif;font-size:12px;
+  color:rgba(245,240,224,.5);background:transparent;transition:all .2s;
+  display:flex;flex-direction:column;align-items:center;gap:3px}
+.tab .t-icon{font-size:19px}
+.tab.active{background:rgba(245,240,224,.97);color:var(--ink2);
+  box-shadow:0 2px 12px var(--shadow);border:1px solid var(--border)}
+.tab:hover:not(.active){background:rgba(245,240,224,.1);color:rgba(245,240,224,.8)}
+
+/* ══ CARD ══ */
+.card{background:var(--surface);border-radius:18px;padding:22px 20px;
+  border:1px solid var(--border);margin-bottom:14px;
+  box-shadow:0 4px 0 rgba(200,149,42,.15),0 10px 36px var(--shadow),
+             inset 0 1px 0 rgba(255,255,255,.9)}
+.card h3{font-size:14px;font-weight:700;color:var(--ink2);
+  letter-spacing:.5px;margin-bottom:14px}
+
+/* ══ SCORE BAR ══ */
+.score-bar{display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface);border-radius:12px;padding:10px 16px;
+  border:1px solid var(--border);margin-bottom:14px;
+  box-shadow:0 2px 8px var(--shadow)}
+.sp-score{font-size:26px;font-weight:700;color:var(--blue);line-height:1}
+.sp-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-top:2px}
+.prog-wrap{width:90px;height:4px;background:rgba(0,0,0,.1);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--blue2));
+  border-radius:2px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+.sp-num{font-size:11px;color:var(--ink3);margin-top:4px;text-align:center}
+.streak-pill{background:rgba(200,149,42,.12);border:1px solid rgba(200,149,42,.3);
+  color:var(--gold);border-radius:20px;padding:4px 12px;font-size:14px;font-weight:700}
+
+/* ══ CAT BADGE ══ */
+.cat-badge{display:inline-flex;align-items:center;gap:6px;border-radius:20px;
+  padding:4px 14px;font-size:11px;font-weight:700;color:#fff;
+  letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.2)}
+
+/* ══ Q-CARD ══ */
+.q-card{background:var(--surface);border-radius:20px;
+  padding:28px 22px 22px;border:2px solid var(--border);
+  box-shadow:0 8px 36px var(--shadow),inset 0 1px 0 rgba(255,255,255,.9);
+  margin-bottom:14px;transition:background .3s,border-color .3s;
+  animation:cardIn .35s cubic-bezier(.22,1,.36,1)}
+.q-card.correct{background:rgba(42,107,58,.06);border-color:rgba(42,107,58,.4)}
+.q-card.wrong{background:rgba(139,26,26,.06);border-color:rgba(139,26,26,.35)}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.q-num{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+
+/* Word display */
+.heb-main{font-family:'Noto Serif Hebrew',serif;font-size:50px;font-weight:900;
+  direction:rtl;text-align:center;line-height:1.2;color:var(--ink);
+  text-shadow:1px 1px 0 rgba(200,149,42,.1);margin-bottom:4px}
+.heb-context{font-family:'Noto Serif Hebrew',serif;font-size:14px;
+  direction:rtl;text-align:center;color:var(--ink3);margin-bottom:14px;
+  font-style:italic;padding:8px 12px;background:rgba(200,149,42,.07);
+  border-radius:8px;border-right:2px solid var(--gold);line-height:1.7}
+
+/* Rashi badge */
+.rashi-badge{display:inline-flex;align-items:center;gap:5px;
+  background:linear-gradient(135deg,rgba(200,149,42,.2),rgba(200,149,42,.08));
+  border:1px solid rgba(200,149,42,.4);border-radius:20px;
+  padding:4px 12px;font-size:11px;font-weight:700;color:var(--gold);
+  margin-bottom:12px;text-align:center}
+
+/* Description */
+.word-desc{font-size:17px;font-style:italic;color:var(--ink2);
+  padding:12px 16px;background:rgba(200,149,42,.06);border-radius:10px;
+  border-right:3px solid var(--gold);margin-bottom:14px;line-height:1.6;
+  direction:rtl}
+.word-desc.hidden{filter:blur(8px);opacity:.3;user-select:none}
+.claimed-def{font-size:17px;font-style:italic;color:var(--ink2);
+  padding:12px 16px;background:rgba(200,149,42,.06);border-radius:10px;
+  border-right:3px solid var(--gold);margin-bottom:14px;line-height:1.6;
+  transition:color .3s}
+.claimed-def.wrong-c{color:var(--red)}
+
+/* FR zone */
+.fr-zone{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.fr-trad{font-size:18px;font-style:italic;color:var(--ink2);flex:1;
+  padding:10px 14px;background:rgba(200,149,42,.06);border-radius:10px;
+  border-right:2px solid var(--gold);direction:ltr;transition:all .3s}
+.fr-trad.hidden{filter:blur(7px);opacity:.3;user-select:none}
+.toggle-btn{background:rgba(200,149,42,.08);border:1px solid rgba(200,149,42,.25);
+  color:var(--gold);border-radius:8px;padding:8px 10px;cursor:pointer;
+  font-size:16px;transition:all .2s;min-width:40px;min-height:40px}
+.toggle-btn:hover{background:rgba(200,149,42,.18)}
+
+/* Audio */
+.audio-btn{display:inline-flex;align-items:center;gap:6px;
+  background:rgba(200,149,42,.08);border:1px solid rgba(200,149,42,.25);
+  color:var(--gold);border-radius:20px;padding:5px 14px;
+  cursor:pointer;font-family:'Crimson Pro',serif;font-size:13px;
+  transition:all .2s;margin-bottom:12px}
+.audio-btn:hover{background:rgba(200,149,42,.18);transform:translateY(-1px)}
+.audio-btn.playing{background:rgba(42,109,168,.1);border-color:var(--blue2);color:var(--blue2)}
+
+/* Feedback */
+.feedback{margin-top:12px;font-size:15px;font-weight:700;
+  animation:fadeUp .3s ease;display:none;line-height:1.6;
+  padding:10px 14px;border-radius:10px}
+.feedback.correct{color:var(--green);background:rgba(42,107,58,.08);border:1px solid rgba(42,107,58,.2)}
+.feedback.wrong{color:var(--red);background:rgba(139,26,26,.08);border:1px solid rgba(139,26,26,.2)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ══ VF BUTTONS ══ */
+.btn-row{display:flex;gap:10px;margin-bottom:10px}
+.ans-btn{flex:1;padding:17px 8px;border-radius:14px;border:2px solid transparent;
+  cursor:pointer;font-family:'Crimson Pro',serif;font-weight:700;font-size:16px;
+  display:flex;flex-direction:column;align-items:center;gap:5px;transition:all .2s}
+.ans-btn:hover:not(:disabled){transform:translateY(-3px)}
+.ans-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.ans-btn .icon{font-size:24px;line-height:1}
+.ans-btn .hlbl{font-family:'Noto Serif Hebrew',serif;font-size:12px;direction:rtl}
+.btn-false{background:rgba(139,26,26,.1);border-color:rgba(139,26,26,.3);color:var(--red)}
+.btn-false:hover:not(:disabled){background:rgba(139,26,26,.18);border-color:var(--red);box-shadow:0 0 20px rgba(139,26,26,.15)}
+.btn-true{background:rgba(42,107,58,.1);border-color:rgba(42,107,58,.3);color:var(--green)}
+.btn-true:hover:not(:disabled){background:rgba(42,107,58,.18);border-color:var(--green);box-shadow:0 0 20px rgba(42,107,58,.15)}
+
+/* ══ RECONSTITUER ══ */
+.recon-target{min-height:56px;border:2px dashed var(--border);border-radius:12px;
+  padding:10px 12px;display:flex;flex-wrap:wrap;gap:7px;align-items:center;
+  margin-bottom:12px;background:rgba(200,149,42,.04);
+  direction:rtl;transition:border-color .2s}
+.recon-target.has-tiles{border-style:solid;border-color:rgba(200,149,42,.45)}
+.recon-target .placeholder{font-size:12px;color:var(--ink3);font-style:italic}
+.tiles-pool{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;direction:rtl}
+.tile{font-family:'Noto Serif Hebrew',serif;font-size:17px;font-weight:700;
+  padding:8px 15px;border-radius:8px;cursor:pointer;
+  background:var(--surface2);border:1.5px solid var(--border);
+  color:var(--ink);transition:all .18s;user-select:none;direction:rtl}
+.tile:hover{transform:translateY(-2px);border-color:var(--gold);
+  box-shadow:0 4px 12px rgba(200,149,42,.15)}
+.tile.used{opacity:.25;pointer-events:none}
+.tile.placed{background:rgba(200,149,42,.12);border-color:rgba(200,149,42,.5);cursor:pointer}
+.recon-check{width:100%;padding:13px;border:none;border-radius:12px;
+  background:linear-gradient(135deg,var(--blue2),#0d3d73);color:#fff;
+  font-size:15px;font-weight:700;cursor:pointer;font-family:'Crimson Pro',serif;
+  box-shadow:0 4px 16px rgba(30,95,168,.3);transition:all .2s;margin-bottom:10px;
+  letter-spacing:.5px}
+.recon-check:hover{transform:translateY(-2px)}
+.recon-check:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.recon-feedback{padding:11px 14px;border-radius:10px;font-size:14px;font-weight:700;
+  display:none;margin-bottom:10px;animation:fadeUp .3s ease}
+.recon-feedback.ok{background:rgba(42,107,58,.08);color:var(--green);border:1px solid rgba(42,107,58,.2)}
+.recon-feedback.ko{background:rgba(139,26,26,.08);color:var(--red);border:1px solid rgba(139,26,26,.2)}
+
+/* ══ FLASH ══ */
+.flash-card{background:var(--surface);border-radius:20px;padding:36px 24px;text-align:center;
+  border:2px solid var(--border);box-shadow:0 10px 40px var(--shadow),inset 0 1px 0 rgba(255,255,255,.9);
+  margin-bottom:14px;cursor:pointer;transition:all .25s;
+  animation:cardIn .35s cubic-bezier(.22,1,.36,1);
+  min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.flash-card:hover{transform:translateY(-3px);box-shadow:0 18px 50px var(--shadow)}
+.flash-heb{font-family:'Noto Serif Hebrew',serif;font-size:52px;font-weight:900;
+  color:var(--ink);direction:rtl;line-height:1.2;text-shadow:1px 1px 0 rgba(200,149,42,.1)}
+.flash-rashi{margin-top:8px;display:none;animation:fadeUp .3s ease}
+.flash-desc{font-size:18px;font-style:italic;color:var(--ink2);margin-top:10px;
+  display:none;animation:fadeUp .3s ease;line-height:1.5;direction:rtl;
+  padding:10px 14px;background:rgba(200,149,42,.06);border-radius:10px}
+.flash-fr{font-size:17px;font-style:italic;color:var(--blue2);margin-top:8px;
+  display:none;animation:fadeUp .3s ease;direction:ltr}
+.flash-hint{font-size:12px;color:var(--ink3);margin-top:16px;font-style:italic}
+.flash-nav{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
+.fnav-btn{padding:10px 20px;border:1px solid var(--border);
+  border-radius:10px;background:var(--surface2);color:var(--ink2);
+  cursor:pointer;font-family:'Crimson Pro',serif;font-size:14px;font-weight:700;
+  transition:all .2s;min-height:44px}
+.fnav-btn:hover{border-color:var(--gold);background:rgba(200,149,42,.1)}
+.fnav-btn.primary{background:linear-gradient(135deg,var(--blue2),#0d3d73);
+  color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(30,95,168,.28)}
+
+/* ══ CAT GRID ══ */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}
+.cat-sel{border-radius:10px;padding:10px;cursor:pointer;
+  display:flex;align-items:center;gap:7px;transition:all .2s;
+  border:1.5px solid transparent;background:var(--surface2);color:var(--ink3)}
+.cat-sel.on{color:var(--ink)}
+.cat-sel:hover{transform:translateY(-1px)}
+.cat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.cat-name{font-size:12px;font-weight:700;direction:rtl;font-family:'Noto Serif Hebrew',serif}
+.cat-count{font-size:10px;opacity:.6;margin-right:auto}
+
+/* ══ BILAN ══ */
+.bilan-card{background:var(--surface);border-radius:20px;
+  padding:30px 22px;text-align:center;
+  box-shadow:0 10px 40px var(--shadow);border:1px solid var(--border);margin-bottom:14px}
+.b-emoji{font-size:56px;margin-bottom:8px;line-height:1}
+.b-title{font-family:'Noto Serif Hebrew',serif;font-size:26px;font-weight:700;
+  color:var(--ink);direction:rtl;margin-bottom:14px}
+.score-big{display:flex;align-items:baseline;justify-content:center;gap:4px;margin-bottom:6px}
+.sb-n{font-size:68px;font-weight:700;color:var(--blue);line-height:1}
+.sb-sl,.sb-t{font-size:36px;color:var(--ink3)}
+.pct-pill{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#fff;border-radius:20px;padding:4px 22px;font-size:18px;font-weight:700;
+  margin-bottom:18px;box-shadow:0 3px 10px rgba(200,149,42,.3)}
+.bilan-stats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
+.b-stat{background:var(--surface2);border-radius:10px;padding:10px 14px;
+  font-size:12px;color:var(--ink2);display:flex;flex-direction:column;gap:2px;
+  border:1px solid var(--border)}
+.b-stat strong{color:var(--ink);font-size:18px}
+.mistakes-box{background:rgba(139,26,26,.05);border-radius:12px;padding:14px;
+  margin-bottom:14px;border:1px solid rgba(139,26,26,.15);
+  text-align:right;max-height:220px;overflow-y:auto}
+.m-title{font-size:11px;font-weight:700;color:var(--red);margin-bottom:8px;letter-spacing:1px}
+.m-row{display:flex;align-items:center;gap:8px;padding:6px 0;
+  border-bottom:1px solid rgba(139,26,26,.07);font-size:13px}
+.m-row:last-child{border-bottom:none}
+.m-heb{font-family:'Noto Serif Hebrew',serif;font-weight:700;direction:rtl;
+  color:var(--ink);min-width:80px;text-align:right;font-size:17px}
+.m-arr{color:var(--ink3);font-size:11px}
+.m-fr{color:var(--green);font-style:italic;font-weight:600;flex:1;text-align:left;font-size:13px}
+.bilan-btns{display:flex;gap:10px}
+.b-replay{flex:1;padding:13px;background:linear-gradient(135deg,var(--blue2),#0d3d73);
+  color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;
+  cursor:pointer;font-family:'Crimson Pro',serif;transition:transform .15s}
+.b-replay:hover{transform:translateY(-2px)}
+.b-home{flex:1;padding:13px;background:var(--surface2);color:var(--ink2);
+  border:1px solid var(--border);border-radius:12px;
+  font-size:15px;font-weight:700;cursor:pointer;font-family:'Crimson Pro',serif;
+  transition:transform .15s}
+.b-home:hover{transform:translateY(-2px)}
+
+/* Sources in bilan */
+.bilan-sources{margin-bottom:16px}
+.bilan-sources .sl-name{color:var(--gold)!important}
+
+/* ══ MISC ══ */
+.screen{display:none}
+.screen.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.start-btn{width:100%;padding:14px;
+  background:linear-gradient(135deg,var(--blue2),#0d3d73);
+  color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;
+  cursor:pointer;font-family:'Crimson Pro',serif;
+  box-shadow:0 4px 18px rgba(30,95,168,.38);transition:transform .15s;margin-bottom:12px}
+.start-btn:hover{transform:translateY(-2px)}
+.start-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.rules{background:rgba(200,149,42,.06);border-right:3px solid var(--gold);
+  border-radius:0 10px 10px 0;padding:11px 14px;
+  font-size:14px;color:var(--ink2);line-height:1.8;direction:rtl}
+.rules b{color:var(--ink)}
+.info-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:var(--surface2);border-radius:20px;padding:3px 10px;
+  font-size:11px;color:var(--ink2);border:1px solid var(--border);font-weight:600}
+.quit-btn{background:transparent;border:1px solid var(--border);color:var(--ink3);
+  cursor:pointer;font-family:'Crimson Pro',serif;font-size:13px;
+  padding:7px 16px;border-radius:8px;transition:all .2s;display:block;margin:8px auto 0}
+.quit-btn:hover{color:var(--ink2);border-color:var(--gold)}
+.chart-wrap{background:var(--surface);border-radius:12px;padding:16px;
+  border:1px solid var(--border);margin-bottom:14px}
+.chart-lbl{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.chart-empty{font-size:13px;color:var(--ink3);text-align:center;padding:16px 0;font-style:italic}
+.mistakes-box::-webkit-scrollbar{width:3px}
+.mistakes-box::-webkit-scrollbar-thumb{background:rgba(139,26,26,.3);border-radius:2px}
+
+/* Bottom nav */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;
+  background:rgba(26,18,8,.97);border-top:1px solid rgba(200,149,42,.2);
+  display:flex;align-items:stretch;padding-bottom:env(safe-area-inset-bottom);z-index:100;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.bnav-btn{flex:1;padding:10px 4px 8px;border:none;background:transparent;
+  font-family:'Crimson Pro',serif;font-size:11px;font-weight:700;
+  color:rgba(245,240,224,.4);display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;transition:color .2s;-webkit-tap-highlight-color:transparent}
+.bnav-btn .bn-icon{font-size:20px;line-height:1}
+.bnav-btn.active{color:var(--gold2)}
+.bnav-sep{width:1px;background:rgba(200,149,42,.15);margin:8px 0}
+
+/* Mobile */
+html{-webkit-text-size-adjust:100%}
+*{-webkit-tap-highlight-color:transparent}
+button{touch-action:manipulation;cursor:pointer}
+@media(max-width:400px){
+  .app-heb{font-size:28px}
+  .heb-main{font-size:40px}
+  .flash-heb{font-size:42px}
+  .sb-n{font-size:54px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ══ HOME ══ -->
+<div id="s-home" class="screen active">
+  <div class="app-header">
+    <span class="menorah">🕎</span>
+    <div class="app-title">RACHI & LA LANGUE HÉBRAÏQUE</div>
+    <div class="app-heb">רש״י ואוצר המילים</div>
+    <div class="app-sub">Jeu interactif · המִלּוֹן הרַשִׁ״יִּי</div>
+    <div class="ornament">✦</div>
+  </div>
+
+  <!-- SOURCE LINKS -->
+  <div class="sources-bar">
+    <div class="sources-title">📖 מקורות · Sources</div>
+    <a class="source-link" href="https://www.ruvik.co.il/%D7%94%D7%98%D7%95%D7%A8-%D7%94%D7%A9%D7%91%D7%95%D7%A2%D7%99/2023/8923.aspx" target="_blank" rel="noopener">
+      <span class="sl-icon">📰</span>
+      <span class="sl-body">
+        <span class="sl-name">רוּבִיק — הטור השבועי</span>
+        <span class="sl-url">ruvik.co.il / הטור-השבועי / 2023 / 8923</span>
+      </span>
+      <span class="sl-arrow">↗</span>
+    </a>
+    <a class="source-link" href="https://hebrew-academy.org.il/%D7%A2%D7%A6%D7%9E%D7%90%D7%95%D7%AA%D7%95-%D7%A9%D7%9C-%D7%A8%D7%A9%D7%99-%D7%91%D7%AA%D7%97%D7%95%D7%9D-%D7%94%D7%9E%D7%99%D7%9C%D7%95%D7%9F/" target="_blank" rel="noopener">
+      <span class="sl-icon">🏛️</span>
+      <span class="sl-body">
+        <span class="sl-name">האקדמיה ללשון העברית</span>
+        <span class="sl-url">hebrew-academy.org.il / עצמאותו-של-רשי-בתחום-המילון</span>
+      </span>
+      <span class="sl-arrow">↗</span>
+    </a>
+  </div>
+
+  <div class="card">
+    <h3>📂 קטגוריות · Catégories</h3>
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <button onclick="selectAllCats(true)"  style="flex:1;padding:7px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);font-family:'Crimson Pro',serif;font-size:13px;font-weight:700;color:var(--ink2);cursor:pointer">✅ הכל</button>
+      <button onclick="selectAllCats(false)" style="flex:1;padding:7px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);font-family:'Crimson Pro',serif;font-size:13px;font-weight:700;color:var(--ink2);cursor:pointer">☐ נקה</button>
+    </div>
+    <div class="cat-grid" id="home-cat-grid"></div>
+    <div class="info-row">
+      <span class="chip" id="home-chip-count">— מילים</span>
+      <span class="chip">20 שאלות / סבב</span>
+    </div>
+    <h3 style="margin-bottom:10px">🎮 מצב משחק</h3>
+    <div style="display:flex;gap:6px;margin-bottom:16px">
+      <button class="tab active" id="mode-vf"    onclick="setMode('vf')"    style="flex:1;border-radius:10px">
+        <span class="t-icon">✓✗</span><span style="font-size:11px">נכון/לא</span>
+      </button>
+      <button class="tab" id="mode-recon" onclick="setMode('recon')" style="flex:1;border-radius:10px">
+        <span class="t-icon">🔀</span><span style="font-size:11px">שחזור</span>
+      </button>
+      <button class="tab" id="mode-flash" onclick="setMode('flash')" style="flex:1;border-radius:10px">
+        <span class="t-icon">🃏</span><span style="font-size:11px">כרטיסים</span>
+      </button>
+    </div>
+    <button class="start-btn" id="start-btn" onclick="startGame()">▶ התחל · Commencer</button>
+    <div class="rules" id="home-rules">
+      <b>נכון/לא נכון:</b> מילה שחידש רש"י מוצגת עם הגדרה מוצעת — האם היא נכונה?
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <div class="chart-lbl">📈 התקדמות · Progression</div>
+    <canvas id="chart-home" height="120"></canvas>
+    <div class="chart-empty" id="chart-empty-home">אין היסטוריה עדיין · Aucune partie.</div>
+  </div>
+</div>
+
+<!-- ══ VF ══ -->
+<div id="s-vf" class="screen">
+  <div class="score-bar">
+    <div>
+      <div class="sp-score" id="vf-pct">—</div>
+      <div class="sp-label">Score %</div>
+    </div>
+    <div>
+      <div class="prog-wrap"><div class="prog-fill" id="vf-prog" style="width:0%"></div></div>
+      <div class="sp-num" id="vf-num">0 / 20</div>
+    </div>
+    <div class="streak-pill" id="vf-streak">🔥 0</div>
+  </div>
+
+  <div class="cat-badge" id="vf-badge">—</div>
+
+  <div class="q-card" id="vf-card">
+    <div class="q-num" id="vf-qnum">שאלה 1 / 20</div>
+    <div style="display:flex;flex-direction:column;align-items:center">
+      <div class="heb-main" id="vf-heb">—</div>
+      <div class="rashi-badge" id="vf-rashi-badge" style="display:none">✨ חידוש רש"י · Néologisme de Rachi</div>
+      <div class="heb-context" id="vf-context" style="display:none"></div>
+      <button class="audio-btn" id="vf-audio" onclick="speakHeb('vf')">
+        <span id="vf-audio-icon">🔊</span> האזן
+      </button>
+    </div>
+
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin-bottom:7px">הגדרה מוצעת · Définition proposée :</div>
+    <div class="claimed-def" id="vf-claimed">—</div>
+
+    <div class="fr-zone">
+      <div style="font-size:10px;letter-spacing:1px;color:var(--ink3);flex-shrink:0">תרגום</div>
+      <div class="fr-trad hidden" id="vf-fr">—</div>
+      <button class="toggle-btn" onclick="toggleFr('vf-fr','vf-tog')" id="vf-tog">👁</button>
+    </div>
+
+    <div class="feedback" id="vf-feedback"></div>
+  </div>
+
+  <div class="btn-row">
+    <button class="ans-btn btn-false" id="vf-btn-f" onclick="answerVF(false)">
+      <span class="icon">✗</span><span>שֶׁקֶר</span><span class="hlbl">FAUX</span>
+    </button>
+    <button class="ans-btn btn-true" id="vf-btn-t" onclick="answerVF(true)">
+      <span class="icon">✓</span><span>אֱמֶת</span><span class="hlbl">VRAI</span>
+    </button>
+  </div>
+  <button class="quit-btn" onclick="endAndBilan()">↩ סיים וסיכום</button>
+</div>
+
+<!-- ══ RECON ══ -->
+<div id="s-recon" class="screen">
+  <div class="score-bar">
+    <div>
+      <div id="rc-pct" style="font-size:26px;font-weight:700;color:var(--blue);line-height:1">—</div>
+      <div class="sp-label">Score %</div>
+    </div>
+    <div>
+      <div class="prog-wrap"><div class="prog-fill" id="rc-prog" style="width:0%"></div></div>
+      <div class="sp-num" id="rc-num">0 / 10</div>
+    </div>
+    <div class="streak-pill" id="rc-streak">🔥 0</div>
+  </div>
+
+  <div class="cat-badge" id="rc-badge">—</div>
+
+  <div style="background:var(--surface);border-radius:18px;padding:24px 20px 18px;
+    border:1px solid var(--border);box-shadow:0 10px 36px var(--shadow);margin-bottom:14px">
+    <div class="q-num" id="rc-qnum">ביטוי 1 / 10</div>
+    <div style="font-size:18px;font-style:italic;color:var(--ink2);margin-bottom:6px;direction:ltr" id="rc-fr-sent">—</div>
+    <div style="font-size:11px;color:var(--ink3);margin-bottom:14px;letter-spacing:1px">→ שחזר את המשפט בעברית :</div>
+    <div class="recon-target" id="rc-drop">
+      <span class="placeholder">לחץ על הרצועות ←</span>
+    </div>
+    <div class="tiles-pool" id="rc-pool"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <button class="audio-btn" id="rc-audio" onclick="speakHeb('rc')">
+        <span id="rc-audio-icon">🔊</span> שמע תשובה
+      </button>
+      <button class="toggle-btn" onclick="toggleFr('rc-answer-reveal','rc-tog')" id="rc-tog">👁</button>
+      <span style="font-size:11px;color:var(--ink3)">תשובה</span>
+    </div>
+    <div class="fr-trad hidden" id="rc-answer-reveal"
+      style="margin-bottom:10px;direction:rtl;font-family:'Noto Serif Hebrew',serif;font-size:18px">—</div>
+    <div class="recon-feedback" id="rc-feedback"></div>
+    <button class="recon-check" id="rc-check" onclick="checkRecon()">✓ בדוק · Vérifier</button>
+  </div>
+  <button class="quit-btn" onclick="endAndBilan()">↩ סיים וסיכום</button>
+</div>
+
+<!-- ══ FLASH ══ -->
+<div id="s-flash" class="screen">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+    <div style="font-size:11px;color:var(--ink3);letter-spacing:1px" id="fl-counter">1 / 20</div>
+    <div class="cat-badge" id="fl-badge" style="margin-bottom:0">—</div>
+  </div>
+  <div class="flash-card" id="fl-card" onclick="flipFlash()">
+    <div class="flash-heb" id="fl-heb">—</div>
+    <button class="audio-btn" style="margin-top:12px" id="fl-audio" onclick="event.stopPropagation();speakHeb('fl')">
+      <span id="fl-audio-icon">🔊</span> האזן
+    </button>
+    <div class="flash-rashi" id="fl-rashi-badge"></div>
+    <div class="flash-desc" id="fl-desc"></div>
+    <div class="flash-fr" id="fl-fr"></div>
+    <div class="flash-hint" id="fl-hint">לחץ לגילוי · Cliquer pour révéler</div>
+  </div>
+  <div class="flash-nav">
+    <button class="fnav-btn" onclick="flashPrev()">‹ הקודם</button>
+    <button class="fnav-btn primary" onclick="flipFlash()">👁 גלה</button>
+    <button class="fnav-btn" onclick="flashNext()">הבא ›</button>
+  </div>
+  <button class="quit-btn" onclick="goHome()">← בית</button>
+</div>
+
+<!-- ══ BILAN ══ -->
+<div id="s-bilan" class="screen">
+  <div class="bilan-card">
+    <div class="b-emoji" id="b-emoji">🏆</div>
+    <div class="b-title" id="b-title">מְצוּיָן !</div>
+    <div class="score-big">
+      <span class="sb-n" id="b-score">0</span>
+      <span class="sb-sl">/</span>
+      <span class="sb-t" id="b-tot">0</span>
+    </div>
+    <div class="pct-pill" id="b-pct">0%</div>
+    <div class="bilan-stats">
+      <div class="b-stat"><span>🔥 רצף מקס׳</span><strong id="b-streak">0</strong></div>
+      <div class="b-stat"><span>❌ שגיאות</span><strong id="b-err">0</strong></div>
+      <div class="b-stat"><span>📊 סבבים</span><strong id="b-games">0</strong></div>
+    </div>
+    <div class="mistakes-box" id="b-mistakes" style="display:none">
+      <div class="m-title">לחזור על · À revoir :</div>
+      <div id="b-mistakes-list"></div>
+    </div>
+    <div class="chart-wrap" style="margin-bottom:14px">
+      <div class="chart-lbl">📈 התקדמות</div>
+      <canvas id="chart-bilan" height="100"></canvas>
+    </div>
+
+    <!-- Sources reminder in bilan -->
+    <div class="sources-bar bilan-sources" style="margin-bottom:16px">
+      <div class="sources-title">📖 למד עוד · Pour aller plus loin</div>
+      <a class="source-link" href="https://www.ruvik.co.il/%D7%94%D7%98%D7%95%D7%A8-%D7%94%D7%A9%D7%91%D7%95%D7%A2%D7%99/2023/8923.aspx" target="_blank" rel="noopener">
+        <span class="sl-icon">📰</span>
+        <span class="sl-body"><span class="sl-name">רוּבִיק — הטור השבועי</span></span>
+        <span class="sl-arrow">↗</span>
+      </a>
+      <a class="source-link" href="https://hebrew-academy.org.il/%D7%A2%D7%A6%D7%9E%D7%90%D7%95%D7%AA%D7%95-%D7%A9%D7%9C-%D7%A8%D7%A9%D7%99-%D7%91%D7%AA%D7%97%D7%95%D7%9D-%D7%94%D7%9E%D7%99%D7%9C%D7%95%D7%9F/" target="_blank" rel="noopener">
+        <span class="sl-icon">🏛️</span>
+        <span class="sl-body"><span class="sl-name">האקדמיה ללשון העברית</span></span>
+        <span class="sl-arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="bilan-btns">
+      <button class="b-replay" onclick="startGame()">🔄 שחק שוב</button>
+      <button class="b-home" onclick="goHome()">🏠 בית</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<nav class="bottom-nav">
+  <button class="bnav-btn active" id="bnav-home" onclick="goHome();setBottomNav('home')">
+    <span class="bn-icon">🏠</span><span>בית</span>
+  </button>
+  <div class="bnav-sep"></div>
+  <button class="bnav-btn" id="bnav-vf" onclick="setModeAndStart('vf')">
+    <span class="bn-icon">✓✗</span><span>נכון/לא</span>
+  </button>
+  <div class="bnav-sep"></div>
+  <button class="bnav-btn" id="bnav-recon" onclick="setModeAndStart('recon')">
+    <span class="bn-icon">🔀</span><span>שחזור</span>
+  </button>
+  <div class="bnav-sep"></div>
+  <button class="bnav-btn" id="bnav-flash" onclick="setModeAndStart('flash')">
+    <span class="bn-icon">🃏</span><span>כרטיסים</span>
+  </button>
+</nav>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA — מילים שחידש רש"י + מידע על חייו
+// ═══════════════════════════════════════════════════════════
+const CATS = [
+  {id:"chidush",  label:"חידושי רש\"י",   fr:"Néologismes de Rachi",   color:"#c8952a"},
+  {id:"societe",  label:"חברה ותרבות",     fr:"Société & Culture",      color:"#2a6b3a"},
+  {id:"corps",    label:"גוף ורפואה",      fr:"Corps & Médecine",       color:"#8b1a1a"},
+  {id:"caractere",label:"אופי ומידות",     fr:"Caractère & Qualités",   color:"#5a1a6b"},
+  {id:"langue",   label:"לשון ודקדוק",     fr:"Langue & Grammaire",     color:"#1a4a7a"},
+  {id:"biographie",label:"ביוגרפיה",       fr:"Biographie de Rachi",    color:"#b85a10"},
+];
+
+// heb, fr = French translation, desc = Hebrew definition, cat, rashi (bool), altDesc (false claim)
+const DATA = [
+  // ══ CHIDUSH (néologismes confirmés) ══
+  {heb:"הַצְלָחָה",  fr:"Succès / Réussite",
+   desc:"מצב שבו מגיעים למטרה הרצויה",
+   altDesc:"תחושה של כישלון ואכזבה",
+   cat:"chidush", rashi:true},
+  {heb:"הַסְכָּמָה",  fr:"Accord / Consentement",
+   desc:"הסכמת שני צדדים על דבר-מה",
+   altDesc:"ויכוח עז בין שני אנשים",
+   cat:"chidush", rashi:true},
+  {heb:"יַהֲדוּת",   fr:"Judaïsme",
+   desc:"המושג הכולל לדת ולתרבות היהודית",
+   altDesc:"ספר תורה מיוחד",
+   cat:"chidush", rashi:true},
+  {heb:"פַּרְשָׁן",   fr:"Commentateur / Exégète",
+   desc:"מי שמפרש טקסטים",
+   altDesc:"מי שכותב שירים",
+   cat:"chidush", rashi:true},
+  {heb:"תַּחְבֹּשֶׁת", fr:"Pansement / Bandage",
+   desc:"עזר רפואי לפציעה",
+   altDesc:"כלי נגינה מסורתי",
+   cat:"chidush", rashi:true},
+  {heb:"בַּדְחָן",   fr:"Bouffon / Animateur",
+   desc:"מי שתפקידו לשמח אחרים",
+   altDesc:"מי שמלמד ילדים",
+   cat:"chidush", rashi:true},
+  {heb:"מַאֲסָר",   fr:"Emprisonnement",
+   desc:"מקום או מצב של כליאה",
+   altDesc:"מרכז לימוד גדול",
+   cat:"chidush", rashi:true},
+  {heb:"שְׁאִיפָה",  fr:"Aspiration / Ambition",
+   desc:"רצון עז להשיג מטרה",
+   altDesc:"תהליך נשימה רגיל",
+   cat:"chidush", rashi:true},
+  {heb:"תְּמִיכָה",  fr:"Soutien / Appui",
+   desc:"עזרה ותמיכה שניתנת לאחר",
+   altDesc:"צורת ריהוט לישיבה",
+   cat:"chidush", rashi:true},
+  {heb:"שְׁקִידָה",  fr:"Assiduité / Diligence",
+   desc:"עבודה קשה ומתמשכת",
+   altDesc:"שינה ממושכת",
+   cat:"chidush", rashi:true},
+  {heb:"רְעִידָה",   fr:"Tremblement / Secousse",
+   desc:"תזוזה מהירה ובלתי נשלטת",
+   altDesc:"צחוק רועם",
+   cat:"chidush", rashi:true},
+  {heb:"פְּרִידָה",  fr:"Séparation / Adieu",
+   desc:"רגע הפרד בין אנשים",
+   altDesc:"פגישה שמחה",
+   cat:"chidush", rashi:true},
+  {heb:"תָּמוּהַ",  fr:"Étrange / Surprenant",
+   desc:"מעורר תמיהה ואינו מובן",
+   altDesc:"ברור ומובן לכל",
+   cat:"chidush", rashi:true},
+
+  // ══ SOCIETE ══
+  {heb:"גִּיּוּן",    fr:"Collecte / Levée de fonds",
+   desc:"גביית כסף לצורך ציבורי",
+   altDesc:"חלוקת מתנות",
+   cat:"societe", rashi:true},
+  {heb:"אִירוּעַ",  fr:"Événement / Cérémonie",
+   desc:"מאורע חשוב ומתוכנן",
+   altDesc:"אסון פתאומי",
+   cat:"societe", rashi:true},
+  {heb:"גִּיּלָיוֹן", fr:"Feuille / Page",
+   desc:"דף נייר או עמוד בפרסום",
+   altDesc:"ספר עבה ומיוחד",
+   cat:"societe", rashi:true},
+  {heb:"סַבְלָנוּת", fr:"Patience",
+   desc:"יכולת להמתין ללא כעס",
+   altDesc:"כעס מהיר ועצבנות",
+   cat:"societe", rashi:true},
+  {heb:"הוֹכָחָה",  fr:"Preuve / Démonstration",
+   desc:"ראיה שמוכיחה שמשהו נכון",
+   altDesc:"ספק וחוסר ודאות",
+   cat:"societe", rashi:true},
+  {heb:"יְסוֹדִי",  fr:"Fondamental / Essentiel",
+   desc:"בסיסי וחיוני ביותר",
+   altDesc:"שטחי ולא חשוב",
+   cat:"societe", rashi:true},
+
+  // ══ CORPS & MEDECINE ══
+  {heb:"שִׁפְשׁוּף", fr:"Friction / Frottement",
+   desc:"תנועת חיכוך על גבי משטח",
+   altDesc:"ריח נעים ומרגיע",
+   cat:"corps", rashi:true},
+  {heb:"צְחוּת",   fr:"Clarté / Fluidité (de la langue)",
+   desc:"ביטוי נקי ובהיר בלשון",
+   altDesc:"גמגום ושגיאות דיבור",
+   cat:"corps", rashi:true},
+  {heb:"גַּמְגּוּם", fr:"Bégaiement",
+   desc:"קושי בדיבור עם חזרה על הברות",
+   altDesc:"דיבור שוטף ובהיר",
+   cat:"corps", rashi:true},
+  {heb:"תַּחְבֹּשֶׁת", fr:"Pansement (médical)",
+   desc:"חבישת פצע לשמירה על הריפוי",
+   altDesc:"כלי שמחממים בו מזון",
+   cat:"corps", rashi:true},
+
+  // ══ CARACTERE ══
+  {heb:"קַמְצָנוּת", fr:"Avarice / Pingrerie",
+   desc:"אופי של מי שאינו אוהב לתת",
+   altDesc:"נדיבות ללא גבול",
+   cat:"caractere", rashi:true},
+  {heb:"שָׁפוּי",   fr:"Sain d'esprit / Sensé",
+   desc:"בעל שפיות ושיקול דעת תקין",
+   altDesc:"חולה ומבולבל",
+   cat:"caractere", rashi:true},
+  {heb:"רָהוּט",   fr:"Fluide / Éloquent",
+   desc:"מדבר בצורה שוטפת ובהירה",
+   altDesc:"דובר עם קשיי דיבור",
+   cat:"caractere", rashi:true},
+  {heb:"שַׁתְקָן",  fr:"Taciturne / Silencieux",
+   desc:"אדם שנוהג לשתוק ולא לדבר הרבה",
+   altDesc:"אדם מאוד רועש ודברן",
+   cat:"caractere", rashi:true},
+  {heb:"מִתְעַקֵּשׁ", fr:"Entêté / Qui insiste",
+   desc:"אדם שלא נכנע ומתעקש על דעתו",
+   altDesc:"אדם גמיש שמוכן לוותר",
+   cat:"caractere", rashi:true},
+  {heb:"פְּחִיתוּת", fr:"Infériorité / Médiocrité",
+   desc:"מצב נחות ונמוך מבחינת ערך",
+   altDesc:"מצב של מצוינות",
+   cat:"caractere", rashi:true},
+
+  // ══ LANGUE & GRAMMAIRE ══
+  {heb:"בֵּאוּר",   fr:"Explication / Commentaire",
+   desc:"הסבר מפורט של טקסט או מושג",
+   altDesc:"שאלה ללא תשובה",
+   cat:"langue", rashi:true},
+  {heb:"הִתְפַּלְפֵּל", fr:"Argumenter/Ergoter (pioulpoul)",
+   desc:"לנהל דיון תלמודי מורכב ומחודד",
+   altDesc:"להסכים מיד ללא שאלות",
+   cat:"langue", rashi:true},
+  {heb:"הִתְרָסָה", fr:"Provocation / Défi",
+   desc:"יציאה נגד מישהו בצורה תוקפנית",
+   altDesc:"הצעת שלום וידידות",
+   cat:"langue", rashi:true},
+  {heb:"תָּכוּף",   fr:"Fréquent / Rapide",
+   desc:"שחוזר על עצמו פעמים רבות",
+   altDesc:"נדיר ורחוק",
+   cat:"langue", rashi:true},
+  {heb:"הִתְאַמֵּת", fr:"S'avérer / Se confirmer",
+   desc:"להתברר כנכון ואמיתי",
+   altDesc:"להתגלות כשקר",
+   cat:"langue", rashi:true},
+  {heb:"דָּלוּחַ",  fr:"Trouble / Boueux (liquide)",
+   desc:"נוזל שאינו צלול ובו חלקיקים",
+   altDesc:"מים צלולים וטהורים",
+   cat:"langue", rashi:true},
+
+  // ══ BIOGRAPHIE ══
+  {heb:"טְרוּאָה",  fr:"Troyes (ville natale)",
+   desc:"העיר בצרפת שבה נולד רש\"י ב-1040",
+   altDesc:"עיר בגרמניה שבה נולד רש\"י",
+   cat:"biographie", rashi:false},
+  {heb:"לְעָזִים",  fr:"Laaz (mots français ancien)",
+   desc:"מילים בצרפתית עתיקה שרש\"י שיבץ בפירושיו",
+   altDesc:"מילים בערבית שרש\"י תרגם",
+   cat:"biographie", rashi:false},
+  {heb:"מַגְנְצָה", fr:"Mayence (ville d'études)",
+   desc:"עיר בגרמניה שבה למד רש\"י בצעירותו",
+   altDesc:"עיר בספרד שבה למד רש\"י",
+   cat:"biographie", rashi:false},
+  {heb:"פֵּרוּשׁ",  fr:"Commentaire / Exégèse",
+   desc:"הסבר שיטתי של טקסט קדוש",
+   altDesc:"כתיבת שירה דתית",
+   cat:"biographie", rashi:false},
+  {heb:"1040",    fr:"Année de naissance de Rachi",
+   desc:"שנת לידתו של רש\"י בטרואה, צרפת",
+   altDesc:"שנת פטירתו של רש\"י",
+   cat:"biographie", rashi:false},
+  {heb:"1,300",   fr:"Nombre de mots renouvelés",
+   desc:"מספר המילים וביטויים שחידש רש\"י לפי המחקר",
+   altDesc:"מספר הפירושים שכתב רש\"י",
+   cat:"biographie", rashi:false},
+];
+
+const SENTENCES = [
+  {heb:"רש\"י נולד בעיר טרואה בצרפת בשנת 1040",
+   fr:"Rachi est né à Troyes en France en 1040",              cat:"biographie"},
+  {heb:"הוא היה פרשן גדול של המקרא והתלמוד",
+   fr:"Il était le grand commentateur de la Bible et du Talmud", cat:"biographie"},
+  {heb:"רש\"י חידש יותר מ-1300 מילים וביטויים",
+   fr:"Rachi a renouvelé plus de 1300 mots et expressions",   cat:"chidush"},
+  {heb:"הוא השתמש בלעזים בצרפתית עתיקה בפירושיו",
+   fr:"Il utilisait des mots en vieux français dans ses commentaires", cat:"langue"},
+  {heb:"המילה הצלחה נטבעה לראשונה על ידי רש\"י",
+   fr:"Le mot 'hatslacha' (succès) a été inventé par Rachi",  cat:"chidush"},
+  {heb:"פירושיו של רש\"י הם המקור הראשון ללימוד",
+   fr:"Les commentaires de Rachi sont la première source d'étude", cat:"biographie"},
+  {heb:"יהדות פרשן ובדחן הן מילים שחידש רש\"י",
+   fr:"Judaïsme, commentateur et bouffon sont des mots de Rachi", cat:"chidush"},
+  {heb:"רש\"י פיתח תפיסה בלשנית עצמאית ומקורית",
+   fr:"Rachi a développé une vision linguistique indépendante", cat:"langue"},
+  {heb:"הוא השתמש בשורשים עבריים ליצירת מילים חדשות",
+   fr:"Il utilisait des racines hébraïques pour créer de nouveaux mots", cat:"langue"},
+  {heb:"סבלנות שתקן וקמצנות הן מילים שחידש רש\"י",
+   fr:"Patience, taciturne et avarice sont des mots de Rachi", cat:"caractere"},
+];
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+const ROUND_VF=20, ROUND_RC=10;
+const STORAGE="rashiGame_hist";
+
+let selCats=new Set(CATS.map(c=>c.id));
+let curMode='vf';
+let gameHist=(()=>{try{return JSON.parse(localStorage.getItem(STORAGE))||[];}catch(e){return[];}})();
+function saveHist(){try{localStorage.setItem(STORAGE,JSON.stringify(gameHist));}catch(e){}}
+
+let vf={queue:[],score:0,total:0,streak:0,maxStreak:0,hist:[],cur:null,answering:false};
+let rc={queue:[],score:0,total:0,streak:0,maxStreak:0,hist:[],cur:null,placed:[],answering:false};
+let fl={queue:[],idx:0,flipped:false};
+
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+function catMeta(id){return CATS.find(c=>c.id===id)||{label:"",fr:"",color:"#888"};}
+
+// ══ HOME ══
+function buildHomeGrid(){
+  const g=document.getElementById('home-cat-grid');g.innerHTML='';
+  CATS.forEach(c=>{
+    const n=DATA.filter(d=>d.cat===c.id).length;
+    const on=selCats.has(c.id);
+    const btn=document.createElement('button');
+    btn.className='cat-sel'+(on?' on':'');
+    btn.style.background=on?c.color+'15':'';
+    btn.style.borderColor=on?c.color:'';
+    btn.style.color=on?c.color:'';
+    btn.innerHTML=`<span class="cat-dot" style="background:${on?c.color:'#bbb'}"></span>
+      <span class="cat-name">${c.label}</span>
+      <span class="cat-count">${n}</span>`;
+    btn.onclick=()=>{
+      if(selCats.has(c.id)){if(selCats.size>1)selCats.delete(c.id);}
+      else selCats.add(c.id);
+      buildHomeGrid();
+    };
+    g.appendChild(btn);
+  });
+  const total=DATA.filter(d=>selCats.has(d.cat)).length;
+  document.getElementById('home-chip-count').textContent=`🎯 ${total} מילים`;
+  document.getElementById('start-btn').disabled=total<2;
+}
+
+function selectAllCats(all){
+  if(all)CATS.forEach(c=>selCats.add(c.id));
+  else{selCats.clear();selCats.add(CATS[0].id);}
+  buildHomeGrid();
+}
+
+function setMode(m){
+  curMode=m;
+  ['vf','recon','flash'].forEach(id=>{
+    document.getElementById('mode-'+id).classList.toggle('active',id===m);
+  });
+  const rules=document.getElementById('home-rules');
+  if(m==='vf') rules.innerHTML='<b>נכון/לא נכון:</b> מילה שחידש רש"י מוצגת עם הגדרה מוצעת — האם היא נכונה?';
+  else if(m==='recon') rules.innerHTML='<b>שחזור:</b> בנה מחדש את המשפטים על רש"י בסדר הנכון.';
+  else rules.innerHTML='<b>כרטיסי זיכרון:</b> עיין במילים ובהגדרותיהן. לחץ לגילוי.';
+}
+
+function goHome(){
+  speechSynthesis.cancel();
+  showScreen('s-home');
+  buildHomeGrid();
+  drawChart('chart-home','chart-empty-home');
+}
+
+function startGame(){
+  speechSynthesis.cancel();
+  if(curMode==='vf') startVF();
+  else if(curMode==='recon') startRC();
+  else startFlash();
+}
+
+// ══ VF ══
+function startVF(){
+  const pool=DATA.filter(d=>selCats.has(d.cat));
+  const queue=Array.from({length:ROUND_VF},()=>{
+    const item=pool[Math.floor(Math.random()*pool.length)];
+    const isTrue=Math.random()>.45;
+    const displayedDesc=isTrue?item.desc:item.altDesc;
+    return {...item, displayedDesc, isTrue};
+  });
+  vf={queue,score:0,total:0,streak:0,maxStreak:0,hist:[],cur:null,answering:false};
+  showScreen('s-vf');
+  nextVF();
+}
+
+function nextVF(){
+  vf.answering=false;
+  if(vf.total>=ROUND_VF){endAndBilan();return;}
+  vf.cur=vf.queue[vf.total];
+  const card=document.getElementById('vf-card');
+  card.className='q-card';void card.offsetWidth;card.className='q-card';
+  document.getElementById('vf-heb').textContent=vf.cur.heb;
+  // Rachi badge
+  const rb=document.getElementById('vf-rashi-badge');
+  rb.style.display=vf.cur.rashi?'inline-flex':'none';
+  // Context (biographie)
+  const ctx=document.getElementById('vf-context');
+  ctx.style.display='none';
+  document.getElementById('vf-claimed').textContent=vf.cur.displayedDesc;
+  document.getElementById('vf-claimed').className='claimed-def';
+  document.getElementById('vf-fr').textContent=vf.cur.fr;
+  document.getElementById('vf-fr').className='fr-trad hidden';
+  document.getElementById('vf-tog').textContent='👁';
+  const fb=document.getElementById('vf-feedback');fb.style.display='none';fb.className='feedback';
+  const m=catMeta(vf.cur.cat);
+  const badge=document.getElementById('vf-badge');
+  badge.textContent=m.label+' · '+m.fr;badge.style.background=m.color;
+  document.getElementById('vf-btn-f').disabled=false;
+  document.getElementById('vf-btn-t').disabled=false;
+  document.getElementById('vf-qnum').textContent=`שאלה ${vf.total+1} / ${ROUND_VF}`;
+  document.getElementById('vf-prog').style.width=(vf.total/ROUND_VF*100)+'%';
+  document.getElementById('vf-num').textContent=`${vf.total} / ${ROUND_VF}`;
+  resetAudioBtn('vf-audio','vf-audio-icon');
+  speechSynthesis.cancel();
+  updateVFScore();
+}
+
+function answerVF(u){
+  if(vf.answering||!vf.cur)return;
+  vf.answering=true;
+  document.getElementById('vf-btn-f').disabled=true;
+  document.getElementById('vf-btn-t').disabled=true;
+  const ok=(u===vf.cur.isTrue);
+  vf.score+=ok?1:0;vf.total+=1;
+  vf.streak=ok?vf.streak+1:0;vf.maxStreak=Math.max(vf.maxStreak,vf.streak);
+  vf.hist.push({heb:vf.cur.heb,fr:vf.cur.fr,correct:ok});
+  updateVFScore();
+  const card=document.getElementById('vf-card');card.classList.add(ok?'correct':'wrong');
+  if(!ok)document.getElementById('vf-claimed').classList.add('wrong-c');
+  const fb=document.getElementById('vf-feedback');
+  fb.style.display='block';fb.className='feedback '+(ok?'correct':'wrong');
+  fb.innerHTML=ok
+    ?`✓ נָכוֹן! ההגדרה הנכונה: <b>${vf.cur.desc}</b>`
+    :`✗ לֹא נָכוֹן — ההגדרה הנכונה: <b>${vf.cur.desc}</b>`;
+  document.getElementById('vf-fr').className='fr-trad';
+  document.getElementById('vf-prog').style.width=(vf.total/ROUND_VF*100)+'%';
+  document.getElementById('vf-num').textContent=`${vf.total} / ${ROUND_VF}`;
+  setTimeout(()=>nextVF(),2000);
+}
+
+function updateVFScore(){
+  const pct=vf.total>0?Math.round(vf.score/vf.total*100):0;
+  const el=document.getElementById('vf-pct');
+  el.textContent=vf.total>0?pct+'%':'—';
+  el.style.color=pct>=70?'var(--green)':pct>=50?'var(--orange)':'var(--red)';
+  document.getElementById('vf-streak').textContent='🔥 '+vf.streak;
+}
+
+// ══ RECON ══
+function startRC(){
+  const catSents=SENTENCES.filter(s=>selCats.has(s.cat));
+  const pool=catSents.length>0?catSents:SENTENCES;
+  const queue=shuffle(pool).slice(0,Math.min(ROUND_RC,pool.length));
+  rc={queue,score:0,total:0,streak:0,maxStreak:0,hist:[],cur:null,placed:[],answering:false};
+  showScreen('s-recon');
+  nextRC();
+}
+
+function nextRC(){
+  rc.answering=false;
+  if(rc.total>=rc.queue.length){endAndBilan();return;}
+  rc.cur=rc.queue[rc.total];
+  rc.placed=[];
+  document.getElementById('rc-qnum').textContent=`ביטוי ${rc.total+1} / ${rc.queue.length}`;
+  document.getElementById('rc-fr-sent').textContent=rc.cur.fr;
+  const m=catMeta(rc.cur.cat);
+  document.getElementById('rc-badge').textContent=m.label+' · '+m.fr;
+  document.getElementById('rc-badge').style.background=m.color;
+  const words=rc.cur.heb.split(' ').filter(w=>w.length>0);
+  const shuffled=shuffle([...words]);
+  const drop=document.getElementById('rc-drop');
+  drop.innerHTML='<span class="placeholder">לחץ על הרצועות ←</span>';
+  drop.className='recon-target';
+  const pool=document.getElementById('rc-pool');
+  pool.innerHTML='';
+  shuffled.forEach((w,i)=>{
+    const t=document.createElement('span');
+    t.className='tile';t.textContent=w;t.dataset.word=w;t.dataset.idx=i;
+    t.onclick=()=>placeTile(t);
+    pool.appendChild(t);
+  });
+  const reveal=document.getElementById('rc-answer-reveal');
+  reveal.textContent=rc.cur.heb;reveal.classList.add('hidden');
+  document.getElementById('rc-tog').textContent='👁';
+  const fb=document.getElementById('rc-feedback');fb.style.display='none';
+  document.getElementById('rc-check').disabled=false;
+  resetAudioBtn('rc-audio','rc-audio-icon');
+  speechSynthesis.cancel();
+  updateRCScore();
+}
+
+function placeTile(tile){
+  if(tile.classList.contains('used'))return;
+  rc.placed.push({word:tile.dataset.word,tile});
+  tile.classList.add('used');
+  const drop=document.getElementById('rc-drop');
+  const ph=drop.querySelector('.placeholder');
+  if(ph)ph.remove();
+  drop.classList.add('has-tiles');
+  const placed=document.createElement('span');
+  placed.className='tile placed';placed.textContent=tile.dataset.word;
+  placed.onclick=()=>removeTile(placed,tile);
+  drop.appendChild(placed);
+}
+
+function removeTile(placed,original){
+  placed.remove();
+  original.classList.remove('used');
+  rc.placed=rc.placed.filter(p=>p.tile!==original);
+  const drop=document.getElementById('rc-drop');
+  if(drop.querySelectorAll('.tile').length===0){
+    drop.classList.remove('has-tiles');
+    drop.innerHTML='<span class="placeholder">לחץ על הרצועות ←</span>';
+  }
+}
+
+function checkRecon(){
+  const drop=document.getElementById('rc-drop');
+  const placed=Array.from(drop.querySelectorAll('.tile')).map(t=>t.textContent);
+  const answer=placed.join(' ');
+  const correct=rc.cur.heb;
+  const ok=(answer.trim()===correct.trim());
+  const fb=document.getElementById('rc-feedback');
+  fb.style.display='block';
+  fb.className='recon-feedback '+(ok?'ok':'ko');
+  fb.innerHTML=ok
+    ?`✓ מושלם! <b style="font-family:'Noto Serif Hebrew',serif">${correct}</b>`
+    :`✗ לא מדויק. הנכון: <b style="font-family:'Noto Serif Hebrew',serif;font-size:17px">${correct}</b>`;
+  rc.score+=ok?1:0;rc.total+=1;
+  rc.streak=ok?rc.streak+1:0;rc.maxStreak=Math.max(rc.maxStreak,rc.streak);
+  rc.hist.push({heb:rc.cur.heb,fr:rc.cur.fr,correct:ok});
+  document.getElementById('rc-check').disabled=true;
+  updateRCScore();
+  setTimeout(()=>nextRC(),2400);
+}
+
+function updateRCScore(){
+  const tot=rc.queue.length;
+  const pct=rc.total>0?Math.round(rc.score/rc.total*100):0;
+  const el=document.getElementById('rc-pct');
+  el.textContent=rc.total>0?pct+'%':'—';
+  el.style.color=pct>=70?'var(--green)':pct>=50?'var(--orange)':'var(--red)';
+  document.getElementById('rc-streak').textContent='🔥 '+rc.streak;
+  document.getElementById('rc-prog').style.width=(rc.total/tot*100)+'%';
+  document.getElementById('rc-num').textContent=`${rc.total} / ${tot}`;
+}
+
+// ══ FLASH ══
+function startFlash(){
+  const pool=DATA.filter(d=>selCats.has(d.cat));
+  fl={queue:shuffle(pool),idx:0,flipped:false};
+  showScreen('s-flash');
+  showFlash();
+}
+
+function showFlash(){
+  if(fl.queue.length===0)return;
+  const item=fl.queue[fl.idx];
+  fl.flipped=false;
+  const m=catMeta(item.cat);
+  document.getElementById('fl-badge').textContent=m.label+' · '+m.fr;
+  document.getElementById('fl-badge').style.background=m.color;
+  document.getElementById('fl-heb').textContent=item.heb;
+  const rb=document.getElementById('fl-rashi-badge');
+  rb.innerHTML=item.rashi?'<span style="background:rgba(200,149,42,.15);border:1px solid rgba(200,149,42,.4);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:700;color:#c8952a">✨ חידוש רש"י</span>':'';
+  rb.style.display='block';
+  document.getElementById('fl-desc').style.display='none';
+  document.getElementById('fl-desc').textContent=item.desc;
+  document.getElementById('fl-fr').style.display='none';
+  document.getElementById('fl-fr').textContent=item.fr;
+  document.getElementById('fl-hint').style.display='block';
+  document.getElementById('fl-counter').textContent=`${fl.idx+1} / ${fl.queue.length}`;
+  resetAudioBtn('fl-audio','fl-audio-icon');
+  speechSynthesis.cancel();
+}
+
+function flipFlash(){
+  fl.flipped=!fl.flipped;
+  document.getElementById('fl-desc').style.display=fl.flipped?'block':'none';
+  document.getElementById('fl-fr').style.display=fl.flipped?'block':'none';
+  document.getElementById('fl-hint').style.display=fl.flipped?'none':'block';
+}
+function flashNext(){fl.idx=(fl.idx+1)%fl.queue.length;showFlash();}
+function flashPrev(){fl.idx=(fl.idx-1+fl.queue.length)%fl.queue.length;showFlash();}
+
+// ══ AUDIO ══
+function speakHeb(mode){
+  let text='';
+  if(mode==='vf'&&vf.cur)text=vf.cur.heb;
+  else if(mode==='rc'&&rc.cur)text=rc.cur.heb;
+  else if(mode==='fl'&&fl.queue.length>0)text=fl.queue[fl.idx].heb;
+  if(!text)return;
+  const iconId=mode+'-audio-icon',btnId=mode+'-audio';
+  if(speechSynthesis.speaking){speechSynthesis.cancel();resetAudioBtn(btnId,iconId);return;}
+  const utt=new SpeechSynthesisUtterance(text);
+  utt.lang='he-IL';utt.rate=0.85;
+  const voices=speechSynthesis.getVoices();
+  const hv=voices.find(v=>v.lang==='he-IL')||voices.find(v=>v.lang.startsWith('he'));
+  if(hv)utt.voice=hv;
+  const btn=document.getElementById(btnId);
+  if(btn){btn.className='audio-btn playing';btn.querySelector('#'+iconId).textContent='⏹';}
+  utt.onend=()=>resetAudioBtn(btnId,iconId);
+  utt.onerror=()=>resetAudioBtn(btnId,iconId);
+  speechSynthesis.speak(utt);
+}
+function resetAudioBtn(btnId,iconId){
+  const btn=document.getElementById(btnId),icon=document.getElementById(iconId);
+  if(btn)btn.className='audio-btn';
+  if(icon)icon.textContent='🔊';
+}
+
+function toggleFr(zoneId,btnId){
+  const z=document.getElementById(zoneId),b=document.getElementById(btnId);
+  if(!z)return;
+  const hidden=z.classList.toggle('hidden');
+  if(b)b.textContent=hidden?'🙈':'👁';
+}
+
+// ══ BILAN ══
+function endAndBilan(){
+  speechSynthesis.cancel();
+  let score=0,total=0,maxStreak=0,mistakes=[];
+  if(curMode==='vf'){
+    score=vf.score;total=vf.total;maxStreak=vf.maxStreak;
+    mistakes=vf.hist.filter(h=>!h.correct).map(h=>({heb:h.heb,fr:h.fr}));
+  }else if(curMode==='recon'){
+    score=rc.score;total=rc.total;maxStreak=rc.maxStreak;
+    mistakes=rc.hist.filter(h=>!h.correct).map(h=>({heb:h.heb,fr:h.fr}));
+  }
+  if(total===0){goHome();return;}
+  const pct=Math.round(score/total*100);
+  gameHist.push({date:new Date().toISOString(),pct,mode:curMode});
+  if(gameHist.length>60)gameHist=gameHist.slice(-60);
+  saveHist();
+  showScreen('s-bilan');
+  document.getElementById('b-emoji').textContent=pct>=85?'🏆':pct>=65?'⭐':'💪';
+  document.getElementById('b-title').textContent=pct>=85?'מְצוּיָן! Excellent!':pct>=65?'טוֹב מְאוֹד! Très bien!':'הַמְשֵׁךְ לְהִתְאַמֵּן!';
+  document.getElementById('b-score').textContent=score;
+  document.getElementById('b-tot').textContent=total;
+  document.getElementById('b-pct').textContent=pct+'%';
+  document.getElementById('b-streak').textContent=maxStreak;
+  document.getElementById('b-err').textContent=total-score;
+  document.getElementById('b-games').textContent=gameHist.length;
+  const box=document.getElementById('b-mistakes');
+  if(mistakes.length>0){
+    box.style.display='block';
+    document.getElementById('b-mistakes-list').innerHTML=
+      mistakes.slice(0,12).map(m=>`
+        <div class="m-row">
+          <span class="m-heb">${m.heb}</span>
+          <span class="m-arr">→</span>
+          <span class="m-fr">${m.fr}</span>
+        </div>`).join('');
+  }else box.style.display='none';
+  setTimeout(()=>drawChart('chart-bilan',null),80);
+}
+
+// ══ CHART ══
+function drawChart(cid,emptyId){
+  const canvas=document.getElementById(cid);if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  if(!gameHist||gameHist.length===0){
+    canvas.style.display='none';
+    if(emptyId)document.getElementById(emptyId).style.display='block';
+    return;
+  }
+  if(emptyId)document.getElementById(emptyId).style.display='none';
+  canvas.style.display='block';
+  const W=canvas.parentElement.clientWidth-4,H=parseInt(canvas.getAttribute('height'))||120;
+  canvas.width=W;canvas.height=H;
+  const pad={t:12,r:16,b:24,l:32},gW=W-pad.l-pad.r,gH=H-pad.t-pad.b;
+  ctx.clearRect(0,0,W,H);
+  [0,50,100].forEach(v=>{
+    const y=pad.t+gH*(1-v/100);
+    ctx.strokeStyle='rgba(200,149,42,.1)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+gW,y);ctx.stroke();
+    ctx.fillStyle='rgba(122,100,64,.6)';ctx.font='10px serif';ctx.textAlign='right';
+    ctx.fillText(v+'%',pad.l-4,y+3);
+  });
+  const pts=gameHist.slice(-20);
+  if(pts.length===1){
+    const x=pad.l+gW/2,y=pad.t+gH*(1-pts[0].pct/100);
+    ctx.beginPath();ctx.arc(x,y,5,0,Math.PI*2);ctx.fillStyle='#c8952a';ctx.fill();return;
+  }
+  const grad=ctx.createLinearGradient(0,pad.t,0,pad.t+gH);
+  grad.addColorStop(0,'rgba(200,149,42,.2)');grad.addColorStop(1,'rgba(200,149,42,.01)');
+  ctx.beginPath();
+  pts.forEach((d,i)=>{const x=pad.l+i/(pts.length-1)*gW,y=pad.t+gH*(1-d.pct/100);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.lineTo(pad.l+gW,pad.t+gH);ctx.lineTo(pad.l,pad.t+gH);ctx.closePath();
+  ctx.fillStyle=grad;ctx.fill();
+  ctx.beginPath();ctx.strokeStyle='#c8952a';ctx.lineWidth=2;ctx.lineJoin='round';
+  pts.forEach((d,i)=>{const x=pad.l+i/(pts.length-1)*gW,y=pad.t+gH*(1-d.pct/100);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.stroke();
+  pts.forEach((d,i)=>{
+    const x=pad.l+i/(pts.length-1)*gW,y=pad.t+gH*(1-d.pct/100);
+    ctx.beginPath();ctx.arc(x,y,3.5,0,Math.PI*2);
+    ctx.fillStyle='#f5f0e0';ctx.fill();ctx.strokeStyle='#c8952a';ctx.lineWidth=2;ctx.stroke();
+    if(i===pts.length-1){ctx.fillStyle='#1a4a7a';ctx.font='bold 11px serif';ctx.textAlign='center';ctx.fillText(d.pct+'%',x,y-9);}
+  });
+}
+
+// ══ SCREENS ══
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ══ NAV ══
+function setBottomNav(id){
+  ['home','vf','recon','flash'].forEach(k=>{
+    const b=document.getElementById('bnav-'+k);
+    if(b)b.classList.toggle('active',k===id);
+  });
+}
+function setModeAndStart(m){setBottomNav(m);curMode=m;startGame();}
+
+// ══ FLASH SWIPE ══
+(function(){
+  const card=document.getElementById('fl-card');
+  if(!card)return;
+  let startX=0,moved=false;
+  card.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;moved=false;},{passive:true});
+  card.addEventListener('touchmove',e=>{
+    const dx=e.touches[0].clientX-startX;
+    if(Math.abs(dx)>10){moved=true;card.style.transition='none';
+      card.style.transform=`translateX(${dx*.35}px) rotate(${dx*.015}deg)`;
+      card.style.opacity=String(1-Math.abs(dx)/500);}
+  },{passive:true});
+  card.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-startX;
+    card.style.transition='';card.style.transform='';card.style.opacity='';
+    if(moved&&Math.abs(dx)>55){if(dx>0)flashPrev();else flashNext();}
+    else if(!moved)flipFlash();
+    moved=false;
+  },{passive:true});
+})();
+
+// ══ INIT ══
+buildHomeGrid();
+drawChart('chart-home','chart-empty-home');
+if('speechSynthesis' in window){
+  speechSynthesis.getVoices();
+  speechSynthesis.addEventListener('voiceschanged',()=>speechSynthesis.getVoices());
+}
+</script>
+</body>
+</html>
